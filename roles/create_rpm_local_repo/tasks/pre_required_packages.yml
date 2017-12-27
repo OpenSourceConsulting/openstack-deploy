@@ -1,0 +1,10 @@
+---
+- name: install pre-required packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - yum-utils
+  - createrepo
+  - net-tools
+  - deltarpm

@@ -1,0 +1,17 @@
+---
+- name: install {{ updates_repo_name }} repo
+  yum_repository:
+    name: "{{ updates_repo_name }}"
+    description: "{{ updates_repo_name }}"
+    baseurl: "{{ osc_rpm_repository_url }}/{{ updates_repo_name }}"
+    gpgcheck: no
+
+- name: yum clean all
+  shell: yum clean all
+  ignore_errors: yes
+
+- name: sync updates repo
+  shell: reposync -l --repoid={{ updates_repo_name }} --download_path={{ local_rpm_repository_path }}/
+
+- name: create repo of updates
+  shell: createrepo {{ local_rpm_repository_path }}/{{ updates_repo_name }}

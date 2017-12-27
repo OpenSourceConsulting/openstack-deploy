@@ -1,0 +1,6 @@
+---
+- name: download centos7 image iso
+  get_url:
+    url: "{{ centos_image_url }}"
+    dest: "{{ image_download_path }}/{{ centos_image_name }}"
+    checksum: "sha256:{{ centos_image_checksum }}"

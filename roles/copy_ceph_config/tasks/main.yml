@@ -1,0 +1,61 @@
+---
+# tasks file for copy_ceph_config
+- name: create directories
+  file:
+    path: /etc/kolla/config/{{ item }}
+    state: directory
+  with_items:
+    - nova
+    - cinder
+    - glance
+
+- name: copy ceph.conf
+  fetch:
+    src: /etc/ceph/ceph.conf
+    dest: /etc/kolla/config/{{ item }}/ceph.conf
+    flat: yes
+  with_items:
+    - nova
+    - cinder
+    - glance
+  delegate_to: "{{ groups['ceph_mons'][0] }}"
+
+- name: copy keyring files
+  fetch:
+    src: /etc/ceph/ceph.client.{{ item }}.keyring
+    dest: /etc/kolla/config/{{ item }}/
+    flat: yes
+  with_items:
+    - nova
+    - cinder
+    - glance
+  delegate_to: "{{ groups['ceph_mons'][0] }}"
+
+- name: copy cinder keyring files to nova
+  fetch:
+    src: /etc/ceph/ceph.client.cinder.keyring
+    dest: /etc/kolla/config/nova/
+    flat: yes
+  delegate_to: "{{ groups['ceph_mons'][0] }}"
+
+- name: create directory of cinder volume and backup
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - /etc/kolla/config/cinder/cinder-volume/
+    - /etc/kolla/config/cinder/cinder-backup/
+
+- name: copy cinder keyring files to cinder-volume
+  fetch:
+    src: /etc/ceph/ceph.client.cinder.keyring
+    dest: /etc/kolla/config/cinder/cinder-volume/
+    flat: yes
+  delegate_to: "{{ groups['ceph_mons'][0] }}"
+
+- name: copy cinder keyring files to cinder-volume
+  fetch:
+    src: /etc/ceph/ceph.client.cinder-backup.keyring
+    dest: /etc/kolla/config/cinder/cinder-backup/
+    flat: yes
+  delegate_to: "{{ groups['ceph_mons'][0] }}"

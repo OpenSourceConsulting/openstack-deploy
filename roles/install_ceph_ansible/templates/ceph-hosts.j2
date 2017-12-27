@@ -1,0 +1,29 @@
+[mons]
+{% for mon in groups['ceph_mons'] %}
+{{ mon }}
+{% endfor %}
+
+[osds]
+{% for osd in groups['ceph_osds'] %}
+{{ osd }}
+{% endfor %}
+
+[all:vars]
+{% if var_ansible_user is defined %}
+ansible_user={{ var_ansible_user }}
+{% endif %}
+{% if var_ansible_become is defined %}
+ansible_become={{ var_ansible_become }}
+{% endif %}
+{% if var_ansible_connection is defined %}
+ansible_connection={{ var_ansible_connection }}
+{% endif %}
+{% if var_ansible_port is defined %}
+ansible_port={{ var_ansible_port }}
+{% endif %}
+{% if var_ansible_ssh_pass is defined %}
+ansible_ssh_pass={{ var_ansible_ssh_pass }}
+{% endif %}
+{% if var_ansible_sudo_pass is defined %}
+ansible_sudo_pass={{ var_ansible_sudo_pass }}
+{% endif %}

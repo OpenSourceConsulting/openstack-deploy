@@ -1,0 +1,33 @@
+---
+- include_vars: chrony.yml
+
+- name: ensure ntp package is absent
+  package: name=ntp state=absent
+  when: chrony_remove_ntp
+
+- name: ensure chrony packages are installed
+  package:
+    name: chrony
+    state: present
+
+- name: update chrony.conf from template
+  template:
+    src: chrony.conf.j2
+    dest: /etc/chrony.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  register: chrony_conf
+
+- name: ensure chrony service is started and enabled
+  service:
+    name: chronyd
+    enabled: yes
+    state: started
+
+- name: ensure chrony service is restarted if necessary
+  service:
+    name: chronyd
+    state: restarted
+  when: chrony_conf|changed

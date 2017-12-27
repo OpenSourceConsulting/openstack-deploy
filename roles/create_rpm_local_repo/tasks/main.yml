@@ -1,0 +1,28 @@
+---
+# tasks file for local_repo_settings
+- name: create root path of repo
+  file:
+    path: "{{ local_rpm_repository_path }}"
+    state: directory
+
+# create repogitory files
+- name: create repo file path
+  file: 
+    path: "{{ local_rpm_repository_files_path }}"
+    state: directory
+
+- include: pre_required_packages.yml
+
+- include: delete_repo_files.yml
+- include: create_repo_files.yml
+
+- include: base_repo_sync.yml
+- include: updates_repo_sync.yml
+- include: epel_repo_sync.yml
+- include: extras_repo_sync.yml
+- include: openstack_repo_sync.yml
+- include: ceph_repo_sync.yml
+- include: docker_repo_sync.yml
+
+- include: repo_files_create.yml
+- include: http_run_for_repo.yml

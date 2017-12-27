@@ -1,0 +1,48 @@
+- name: Download ceph-ansible from github
+  git:
+    repo: "{{ ceph_git_url }}"
+    dest: "{{ ceph_git_path }}"
+    version: "{{ ceph_git_version }}"
+    force: yes
+
+#- name: overwrite files modified
+#  copy:
+#    src: ceph-ansible-modified/
+#    dest: "{{ ceph_git_path }}"
+
+- name: create ceph inventory file
+  template:
+    src: ceph-hosts.j2
+    dest: "{{ ceph_git_path }}/ceph-hosts.txt"
+
+- name: chanage pre_requisite.yml
+  copy:
+    src: pre_requisite.yml
+    dest: "{{ ceph_git_path }}/roles/ceph-osd/tasks/pre_requisite.yml"
+
+- name: create group_vars/all.yml
+  template:
+    src: all.yml.j2
+    dest: "{{ ceph_git_path }}/group_vars/all.yml"
+    #dest: "{{ ceph_git_path }}/group_vars/all.yml.with_options.j2"
+
+- name: create group_vars/osds.yml
+  template:
+    src: osds.yml.j2
+    dest: "{{ ceph_git_path }}/group_vars/osds.yml"
+
+- name: copy mons.yml
+  copy:
+    src: mons.yml
+    dest: "{{ ceph_git_path }}/group_vars/mons.yml"
+
+- name: copy site.yml
+  copy:
+    src: "{{ ceph_git_path }}/site.yml.sample"
+    dest: "{{ ceph_git_path }}/site.yml"
+
+- name: add host_key_checking = false
+  lineinfile:
+    path: "{{ ceph_git_path }}/ansible.cfg"
+    line: 'host_key_checking = false'
+    insertafter: '^[defaults]'

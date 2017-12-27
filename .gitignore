@@ -1,0 +1,11 @@
+# playbook retry
+*.retry
+
+# pycharm
+.idea
+
+# deploy directory
+deployment/ceph-ansible
+deployment/kolla-ansible
+
+

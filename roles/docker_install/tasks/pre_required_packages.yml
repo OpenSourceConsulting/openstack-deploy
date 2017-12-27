@@ -1,0 +1,7 @@
+- name: install packages depanded
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - python-docker-py
+    - libtool-ltdl

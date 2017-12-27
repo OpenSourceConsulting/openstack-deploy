@@ -1,0 +1,8 @@
+- debug:
+    msg: Please run as precheck "kolla-ansible prechecks -i /etc/kolla/multinode"
+
+- debug:
+    msg: Please run as deploy "kolla-ansible deploy -i /etc/kolla/multinode"
+
+- debug:
+    msg: Please run to create rc file "kolla-ansible ost-deploy -i /etc/kolla/multinode"

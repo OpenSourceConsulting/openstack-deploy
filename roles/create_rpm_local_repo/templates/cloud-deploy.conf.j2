@@ -1,0 +1,11 @@
+<VirtualHost *:80>
+    ServerName  {{ deploy_server_hostname }}
+    ServerAlias {{ deploy_server_ip }}
+    ErrorLog logs/{{ deploy_server_hostname }}-error.log
+    CustomLog logs/{{ deploy_server_hostname }}-common.log common
+    DocumentRoot {{ local_rpm_repository_path }}
+   <Directory {{ local_rpm_repository_path }}>
+       Options +Indexes +FollowSymlinks +Includes
+       Require all granted
+   </Directory>
+</VirtualHost>

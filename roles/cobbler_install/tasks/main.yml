@@ -1,0 +1,6 @@
+---
+# tasks file for cobbler_install
+- include: download_iso_file.yml
+- include: cobbler_install.yml
+- include: cobbler_settings.yml
+- include: cobbler_cleanup.yml

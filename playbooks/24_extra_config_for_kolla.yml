@@ -1,0 +1,10 @@
+---
+- name: Extra configuration for kolla
+  hosts: kolla
+
+  tasks:
+  - name: create symbolic link to kolla log directory
+    file:
+      src: /var/lib/docker/volumes/kolla_logs/_data
+      dest: /var/log/kolla_logs
+      state: link

@@ -1,0 +1,6 @@
+---
+# vars file for docker
+docker_package_name: docker-ce
+
+use_docker_local_repo: true
+docker_local_repo: "{{ local_rpm_repository_url }}/docker-ce-stable"

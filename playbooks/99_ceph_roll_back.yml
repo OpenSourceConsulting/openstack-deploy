@@ -1,0 +1,6 @@
+---
+- name: Destroy ceph cluster
+  hosts: ceph
+
+  roles:
+    - roll_back_ceph_nodes

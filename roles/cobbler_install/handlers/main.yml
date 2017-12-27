@@ -1,0 +1,6 @@
+---
+# handlers file for cobbler_install
+- name: restart httpd
+  service:
+    name: httpd
+    state: restarted

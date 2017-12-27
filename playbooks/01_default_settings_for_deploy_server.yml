@@ -1,0 +1,7 @@
+---
+- name: Preparation for ceph and kolla deployment
+  hosts: 127.0.0.1
+  connection: local
+
+  roles:
+    - default_settings

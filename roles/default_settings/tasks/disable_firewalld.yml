@@ -1,0 +1,12 @@
+- name: check firewalld package
+  shell: yum list installed firewalld
+  register: pkg_check
+  ignore_errors: yes
+
+- name: disable firewalld
+  service:
+    name: firewalld
+    state: stopped
+    enabled: False
+  when: pkg_check.rc == 0
+  ignore_errors: yes

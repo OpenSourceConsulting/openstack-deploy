@@ -1,0 +1,5 @@
+---
+- name: Copy ceph configuration files and keyrings
+  hosts: cloud-deploy
+  roles:
+    - copy_ceph_config

@@ -1,0 +1,157 @@
+---
+###################
+# global settings #
+###################
+var_ansible_user: centos
+var_ansible_become: true
+var_ansible_connection: ssh
+var_ansible_port: 22
+#var_ansible_ssh_pass: 
+#var_ansible_sudo_pass: 
+
+# docker registry which download container images from
+osc_docker_registry_server: "repo.opensourcelab.co.kr:5043"
+osc_docker_registry_username: "oscuser"
+osc_docker_registry_password: "dhvmsthtm"
+
+# rpm repository which download rpm packages from
+osc_rpm_repository_url: "http://repo.opensourcelab.co.kr/CLOUD_REPOs"
+
+
+# Each name of repositories
+base_repo_name:      "base"
+epel_repo_name:      "epel"
+extras_repo_name:    "extras"
+updates_repo_name:   "updates"
+ceph_repo_name:      "centos-ceph-jewel"
+docker_repo_name:    "docker-ce-stable"
+openstack_repo_name: "centos-openstack-ocata"
+
+
+# deploy server settings
+deploy_server_hostname: "{{ hostvars['cloud-deploy'].inventory_hostname }}"
+deploy_server_ip:       "{{ hostvars['cloud-deploy'].ansible_host }}"
+deployment_path:        "../deployment"
+
+
+# Settings Local Deploy Server
+local_rpm_repository_url: "http://{{ deploy_server_hostname }}"
+local_rpm_repository_path: "/home/REPOs"
+local_rpm_repository_files_path: "{{ local_rpm_repository_path }}/repo_files"
+
+# Settings Local Deploy Server
+local_docker_registry_port: "5000"
+local_docker_registry_url:  "{{ deploy_server_hostname }}:{{ local_docker_registry_port }}"
+
+# dns servers
+dns_servers:
+  - "168.126.63.1"
+  - "168.126.63.2"
+
+
+####################
+# Cobbler settings #
+####################
+# PASSWD : root123
+encrypted_passwd: $1$EhFaYJUa$3vK4gMmzICxAiBsQAdjoG/
+
+# Minimal ISO
+centos_image_name: CentOS-7-x86_64-Minimal-1611.iso
+centos_image_checksum: 27bd866242ee058b7a5754e83d8ee8403e216b93d130d800852a96f41c34d86a
+centos_image_url: "{{ osc_rpm_repository_url }}/ISOs/{{ centos_image_name }}"
+
+enable_dhcp: True
+dhcp_network: 10.10.10.0
+dhcp_network_subnet: 255.255.255.0
+dhcp_network_gw: 10.10.10.1
+dhcp_network_brd: 10.10.10.255
+dhcp_ip_start: 10.10.10.211
+dhcp_ip_end: 10.10.10.250
+
+
+#########################
+# ceph-ansible settings #
+#########################
+# Variables for ceph
+ceph_git_url: https://github.com/ceph/ceph-ansible.git
+ceph_git_version: v2.3.0rc5
+ceph_git_path: "{{ deployment_path }}/ceph-ansible"
+
+# ceph version and repository file
+ceph_stable_release: jewel
+ceph_custom_repo: http://{{ deploy_server_hostname }}/repo_files/ceph-{{ ceph_stable_release }}.repo
+
+# fsid
+fsid: b37f1747-017e-4d99-ab6e-9bc2b470a04a
+
+max_open_files: 131072
+
+# Journal size
+journal_size: 1024
+
+# Network settings
+monitor_interface: eth1
+public_network: 10.10.30.0/24
+cluster_network: 10.10.40.0/24
+
+# OSDs settings
+journal_collocation: true
+raw_multi_journal: false
+
+osd_devices:
+  - /dev/vdb
+  - /dev/vdc
+
+raw_journal_devices:
+  - /dev/vdb
+  - /dev/vdc
+
+
+##########################
+# kolla-ansible settings #
+##########################
+kolla_ansible_git_url: https://github.com/openstack/kolla-ansible.git
+kolla_ansible_git_version: 4.0.2
+kolla_ansible_git_path: "{{ deployment_path }}/kolla-ansible"
+
+# Password settings
+passwords:
+  keystone_admin_password: adminpassword
+  database_password:       dbpassword
+
+# Network config
+network_interface: eth0
+api_interface: eth0
+cluster_interface: eth0
+tunnel_interface: eth1
+storage_interface: eth2
+neutron_external_interface: eth3
+
+# keepavlied VRRP id
+keepalived_virtual_router_id: "51"
+
+# ipaddress for internal and external API
+kolla_internal_vip_address: 10.10.10.200
+kolla_external_vip_address: 192.168.18.200
+kolla_external_vip_interface: eth4
+
+# Network driver linuxbridge or openvswitch
+neutron_plugin_agent: linuxbridge
+#neutron_plugin_agent: openvswitch
+
+# vlan provider network settings
+enable_vlan_provider: True
+vlan_provider_networks:
+  - vlan_provider_interface: eth1
+    vlan_range_start: 11
+    vlan_range_end: 20
+
+# keystone token provider
+keystone_token_provider: fernet
+fernet_token_expiry: 86400
+
+# Ceph backup for openstack
+ceph_backend: yes
+nova_backend_ceph: yes
+cinder_backend_ceph: yes
+glance_backend_ceph: yes

@@ -1,0 +1,5 @@
+- name: set hosts file
+  lineinfile:
+    line: "{{ ansible_default_ipv4 }} {{ ansible_hostname }}"
+    dest: /etc/hosts
+    state: present

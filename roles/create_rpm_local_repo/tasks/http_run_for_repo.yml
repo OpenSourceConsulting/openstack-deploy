@@ -1,0 +1,16 @@
+---
+- name: install httpd
+  yum:
+    name: httpd
+    state: present
+
+- name: create vhost file for local repo
+  template:
+    src: cloud-deploy.conf.j2
+    dest: /etc/httpd/conf.d/cloud-deploy.conf
+
+- name: start httpd
+  service:
+    name: httpd
+    state: started
+    enabled: true

@@ -1,0 +1,39 @@
+- name: install docker local repository
+  yum_repository:
+    name: docker-ce-stable
+    description: Docker CE Stable - $basearch
+    baseurl: "{{ docker_local_repo }}"
+    gpgcheck: no
+  when: use_docker_local_repo == True
+
+
+- name: install docker repository
+  yum_repository:
+    name: docker-ce-stable
+    description: Docker CE Stable
+    baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+    gpgcheck: yes
+    gpgkey: https://download.docker.com/linux/centos/gpg
+  when: use_docker_local_repo != True
+
+- name: install docker packages
+  yum:
+    name: "{{ docker_package_name }}"
+    state: present
+
+- name: configure /etc/sysconfig/docker
+  template:
+    src: sysconfig_docker.j2
+    dest: /etc/sysconfig/docker
+
+- name: configure /usr/lib/systemd/system/docker.service
+  template:
+    src: systemd_docker.j2
+    dest: /usr/lib/systemd/system/docker.service
+
+- name: start docker
+  systemd:
+    name: docker
+    daemon_reload: yes
+    state: started
+    enabled: True

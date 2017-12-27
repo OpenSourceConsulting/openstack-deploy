@@ -1,0 +1,17 @@
+---
+- name: install {{ epel_repo_name }} repo
+  yum_repository:
+    name: "{{ epel_repo_name }}"
+    description: "{{ epel_repo_name }}"
+    baseurl: "{{ osc_rpm_repository_url }}/{{ epel_repo_name }}"
+    gpgcheck: no
+
+- name: yum clean all
+  shell: yum clean all
+  ignore_errors: yes
+
+- name: sync epel repo
+  shell: reposync -l --repoid={{ epel_repo_name }} --download_path={{ local_rpm_repository_path }}/
+
+- name: create repo of epel
+  shell: createrepo {{ local_rpm_repository_path }}/{{ epel_repo_name }}

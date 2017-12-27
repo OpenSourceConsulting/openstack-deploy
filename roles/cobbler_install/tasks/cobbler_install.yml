@@ -1,0 +1,84 @@
+---
+- name: install packages
+  yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+  - cobbler
+  - xinetd
+  - pykickstart
+
+- name: install dhcp
+  yum:
+    name: dhcp
+    state: present
+  when: enable_dhcp
+
+- name: create settings file
+  template:
+    src: settings.j2
+    dest: /etc/cobbler/settings
+
+- name: enable dhcp
+  lineinfile:
+    path: /etc/cobbler/settings
+    line: "manage_dhcp: 1"
+    regexp: "^manage_dhcp: .*"
+    state: present
+  when: enable_dhcp
+
+- name: create dhcp.conf template
+  template:
+    src: templates/dhcp.template.j2
+    dest: /etc/cobbler/dhcp.template
+  when: enable_dhcp
+
+- name: copy /etc/cobbler/modules.conf
+  copy:
+    src: modules.conf
+    dest: /etc/cobbler/modules.conf
+
+- name: create /usr/share/cobbler/web directory
+  file:
+    path: /usr/share/cobbler/web/
+    state: directory
+
+- name: start httpd
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+
+- name: start cobblerd service
+  service:
+    name: cobblerd
+    state: started
+    enabled: yes
+  register: cobblerd_check
+
+- name: restart httpd
+  service:
+    name: httpd
+    state: restarted
+  when: cobblerd_check.changed
+
+- name: start rsyncd
+  service:
+    name: rsyncd
+    state: started
+    enabled: yes
+
+- name: edit tftp
+  lineinfile:
+    path: /etc/xinetd.d/tftp
+    line: "	disable			= no"
+    regexp: "^	disable			= .*"
+    insertafter: "^	user			= root"
+    state: present
+
+- name: start xinetd
+  service:
+    name: xinetd
+    state: started
+    enabled: yes

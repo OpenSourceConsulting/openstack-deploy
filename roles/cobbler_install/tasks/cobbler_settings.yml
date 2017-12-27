@@ -1,0 +1,62 @@
+---
+- shell: >
+    /bin/cobbler check
+  register: cobbler_check
+
+- debug:
+    var: cobbler_check
+
+- shell: >
+    /bin/cobbler sync
+  register: cobbler_sync
+  ignore_errors: yes
+
+- debug:
+    var: cobbler_sync
+
+- name: create /mnt/iso
+  file:
+    path: /mnt/iso
+    state: directory
+
+- name: mount centos ISO
+  mount:
+    path: /mnt/iso
+    src: "{{ image_download_path }}/{{ centos_image_name }}"
+    fstype: iso9660
+    opts: ro
+    state: mounted
+
+- name: exec cobbler import
+  shell: >
+    cobbler import --arch=x86_64 --path=/mnt/iso --name=CentOS-7
+
+- shell: >
+    cobbler distro list
+  register: cobbler_distro_list
+
+- debug:
+    var: cobbler_distro_list
+
+- shell: >
+    cobbler profile list
+  register: cobbler_profile_list
+
+- debug:
+    var: cobbler_profile_list
+
+- shell: >
+    cobbler distro report --name=CentOS-7-x86_64
+  register: cobbler_distro_report
+
+- debug:
+    var: cobbler_distro_report
+
+- name: create kickstart file to
+  template:
+    src: "{{ kickstart_file_name }}.j2"
+    dest: /var/lib/cobbler/kickstarts/CentOS-7.ks
+
+- name: run cobbler profile edit
+  shell: >
+    cobbler profile edit --name=CentOS-7-x86_64 --kickstart=/var/lib/cobbler/kickstarts/CentOS-7.ks

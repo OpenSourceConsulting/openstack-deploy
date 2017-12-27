@@ -1,0 +1,6 @@
+---
+# tasks file for set_to_use_local_repos
+- include: add_hosts.yml
+- include: delete_repo_files.yml
+- include: download_repo_files.yml
+

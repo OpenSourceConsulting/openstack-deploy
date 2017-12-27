@@ -1,0 +1,23 @@
+---
+chrony_ntp_servers:
+    - "time.bora.net"
+    - "1.pool.ntp.org"
+
+chrony_pkg_state: "latest"
+chrony_pkg_update_cache: "yes"
+chrony_remove_ntp: True
+
+chrony_keyfile: "/etc/chrony.keys"
+chrony_driftfile: "/var/lib/chrony/drift"
+chrony_rtc: "rtcsync"
+chrony_clientlog: "noclientlog"
+chrony_maxstep: "makestep 10 3"
+
+chrony_bindaddresses:
+ - "::1"
+ - "127.0.0.1"
+
+chrony_stratumweight: "stratumweight 0"
+
+chrony_server_settings: "iburst"
+chrony_generatecommandkey: "generatecommandkey"

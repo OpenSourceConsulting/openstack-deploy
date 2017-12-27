@@ -1,0 +1,5 @@
+---
+- name: create yum repo directory
+  file:
+    path: /etc/yum.repos.d
+    state: directory

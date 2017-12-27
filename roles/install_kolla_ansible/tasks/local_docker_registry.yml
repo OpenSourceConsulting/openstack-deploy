@@ -1,0 +1,10 @@
+- name: deploy docker registry on local deploy server
+  docker:
+    name: registry
+    image: registry:2
+    state: started
+    restart_policy: always
+    ports:
+    - "{{ local_docker_registry_port }}:5000"
+    volumes:
+    - "registry:/var/lib/registry"

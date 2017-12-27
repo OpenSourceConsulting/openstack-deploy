@@ -1,0 +1,17 @@
+---
+- name: install {{ openstack_repo_name }} repo
+  yum_repository:
+    name: "{{ openstack_repo_name }}"
+    description: "{{ openstack_repo_name }}"
+    baseurl: "{{ osc_rpm_repository_url }}/{{ openstack_repo_name }}"
+    gpgcheck: no
+
+- name: yum clean all
+  shell: yum clean all
+  ignore_errors: yes
+
+- name: sync openstack repo
+  shell: reposync -l --repoid="{{ openstack_repo_name }}" --download_path={{ local_rpm_repository_path }}/
+
+- name: create repo of openstack
+  shell: createrepo {{ local_rpm_repository_path }}/{{ openstack_repo_name }}

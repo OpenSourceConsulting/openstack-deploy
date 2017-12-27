@@ -1,0 +1,5 @@
+- name: set timezone
+  file:
+    src: /usr/share/zoneinfo/Asia/Seoul
+    dest: /etc/localtime
+    state: link

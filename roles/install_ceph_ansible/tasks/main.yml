@@ -1,0 +1,7 @@
+---
+# tasks file for ceph_deploy
+- include: create_directory.yml
+- include: ceph_ansible_install.yml
+
+- debug:
+    msg: Please run "ansible-playbook -i ceph-hosts.txt site.yml on {{ ceph_git_path }}"

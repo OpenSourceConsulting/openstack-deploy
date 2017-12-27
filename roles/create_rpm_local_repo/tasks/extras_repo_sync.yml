@@ -1,0 +1,17 @@
+---
+- name: install {{ extras_repo_name }} repo
+  yum_repository:
+    name: "{{ extras_repo_name }}"
+    description: "{{ extras_repo_name }}"
+    baseurl: "{{ osc_rpm_repository_url }}/{{ extras_repo_name }}"
+    gpgcheck: no
+
+- name: yum clean all
+  shell: yum clean all
+  ignore_errors: yes
+
+- name: sync extras repo
+  shell: reposync -l --repoid=extras --download_path={{ local_rpm_repository_path }}/
+
+- name: create repo of extras
+  shell: createrepo {{ local_rpm_repository_path }}/extras

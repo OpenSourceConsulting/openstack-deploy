@@ -1,0 +1,4 @@
+---
+- name: yum clean all
+  shell: yum clean all
+  ignore_errors: yes

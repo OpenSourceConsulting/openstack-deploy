@@ -1,0 +1,7 @@
+---
+- name: Disable selinux and firewalld, set ntp server
+  hosts: kolla
+
+  roles:
+  - set_to_use_local_repos
+  - default_settings

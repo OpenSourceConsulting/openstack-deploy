@@ -1,0 +1,12 @@
+---
+- name: tuned setting for ceph cluster
+  shell: tuned-adm profile throughput-performance
+  when: '"ceph" in group_names'
+
+- name: tuned setting for openstack controller
+  shell: tuned-adm profile throughput-performance
+  when: '"controller" in group_names'
+
+- name: tuned setting for openstack compute
+  shell: tuned-adm profile virtual-host
+  when: '"compute" in group_names'

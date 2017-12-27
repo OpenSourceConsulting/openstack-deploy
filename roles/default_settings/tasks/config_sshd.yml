@@ -1,0 +1,9 @@
+- name: chanage sshd conf
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: ^PermitRootLogin.*, line: PermitRootLogin yes }
+    - { regexp: ^UseDNS.*, line: UseDNS no }
+  notify: restart sshd

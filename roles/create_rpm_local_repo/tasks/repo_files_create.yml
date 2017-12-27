@@ -1,0 +1,40 @@
+---
+- name: create repo file path
+  file:
+    path: "{{ local_rpm_repository_files_path }}"
+    state: directory
+
+- name: create base repo file
+  template:
+    src: base.repo.j2
+    dest: "{{ local_rpm_repository_files_path }}/base.repo"
+
+- name: create updates repo file
+  template:
+    src: updates.repo.j2
+    dest: "{{ local_rpm_repository_files_path }}/updates.repo"
+
+- name: create epel repo file
+  template:
+    src: epel.repo.j2
+    dest: "{{ local_rpm_repository_files_path }}/epel.repo"
+
+- name: create extras repo file
+  template:
+    src: extras.repo.j2
+    dest: "{{ local_rpm_repository_files_path }}/extras.repo"
+
+- name: create openstack repo file
+  template:
+    src: openstack.repo.j2
+    dest: "{{ local_rpm_repository_files_path }}/openstack.repo"
+
+- name: create ceph repo file
+  template:
+    src: ceph-jewel.repo.j2
+    dest: "{{ local_rpm_repository_files_path }}/ceph-jewel.repo"
+
+- name: create docker repo file
+  template:
+    src: docker-ce.repo.j2
+    dest: "{{ local_rpm_repository_files_path }}/docker-ce.repo"

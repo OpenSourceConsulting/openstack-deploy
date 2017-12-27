@@ -1,0 +1,6 @@
+---
+- name: Destroy kolla openstack cluster
+  hosts: kolla
+
+  roles:
+    - roll_back_kolla_nodes

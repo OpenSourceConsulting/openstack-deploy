@@ -1,0 +1,7 @@
+---
+- name: pre-installation for kolla
+  hosts: 127.0.0.1
+  connection: local
+
+  roles:
+    - install_kolla_ansible

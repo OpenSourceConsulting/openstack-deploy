@@ -1,0 +1,8 @@
+- name: config dns server
+  lineinfile:
+    path: /etc/resolv.conf
+    line: nameserver {{ item }}
+    state: present
+  with_items:
+    - "{{ dns_servers }}"
+  when: dns_servers

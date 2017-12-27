@@ -1,0 +1,28 @@
+---
+- name: login to private registry
+  docker_login:
+    registry: 'https://{{ osc_docker_registry_server }}'
+    username: '{{ osc_docker_registry_username }}'
+    password: '{{ osc_docker_registry_password }}'
+
+- name: download kolla images from private registry
+  docker_image:
+    name: '{{ osc_docker_registry_server }}/{{ item }}'
+    tag: '{{ kolla_ansible_git_version }}'
+  with_items:
+    - '{{ kolla_images }}'
+
+- name: rename images to use local registry
+  command: >
+    docker tag '{{ osc_docker_registry_server }}/{{ item }}:{{ kolla_ansible_git_version }}'
+               '{{ local_docker_registry_url }}/{{ item }}:{{ kolla_ansible_git_version }}'
+  with_items:
+    - '{{ kolla_images }}'
+
+- name: upload to local docker registry
+  docker_image:
+    name: '{{ local_docker_registry_url }}/{{ item }}'
+    tag: '{{ kolla_ansible_git_version }}'
+    push: yes
+  with_items:
+    - '{{ kolla_images }}'

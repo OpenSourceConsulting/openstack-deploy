@@ -1,0 +1,12 @@
+---
+# tasks file for default_settings
+- include: config_dns_server.yml
+- include: add_hosts.yml
+- include: config_chrony.yml
+- include: config_sshd.yml
+- include: timezone.yml
+- include: disable_postfix.yml
+- include: disable_firewalld.yml
+- include: disable_networkmanager.yml
+- include: disable_selinux.yml
+- include: tuned_settings.yml

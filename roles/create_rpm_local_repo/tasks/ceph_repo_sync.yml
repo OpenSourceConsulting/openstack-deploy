@@ -1,0 +1,17 @@
+---
+- name: install {{ ceph_repo_name }} repo
+  yum_repository:
+    name: "{{ ceph_repo_name }}"
+    description: "{{ ceph_repo_name }}"
+    baseurl: "{{ osc_rpm_repository_url }}/{{ ceph_repo_name }}"
+    gpgcheck: no
+
+- name: yum clean all
+  shell: yum clean all
+  ignore_errors: yes
+
+- name: sync ceph repo
+  shell: reposync -l --repoid="{{ ceph_repo_name }}" --download_path={{ local_rpm_repository_path }}/
+
+- name: create repo of ceph
+  shell: createrepo {{ local_rpm_repository_path }}/{{ ceph_repo_name }}

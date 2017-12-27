@@ -1,0 +1,6 @@
+---
+# handlers file for default_settings
+- name: restart sshd
+  service:
+    name: sshd
+    state: restarted

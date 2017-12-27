@@ -1,0 +1,11 @@
+- name: umount centos ISO
+  mount:
+    path: /mnt/iso
+    src: "{{ image_download_path }}/{{ centos_image_name }}"
+    fstype: iso9660
+    state: unmounted
+
+- name: delete centos ISO file
+  file:
+    path: "{{ image_download_path }}/{{ centos_image_name }}"
+    state: absent

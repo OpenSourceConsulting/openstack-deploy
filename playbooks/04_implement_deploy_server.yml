@@ -1,0 +1,21 @@
+---
+- name: Preparation for ceph and kolla deployment
+  hosts: 127.0.0.1
+  connection: local
+
+  roles:
+    - install_ceph_ansible
+
+    - docker_install
+    - install_kolla_ansible
+
+  post_tasks:
+  - name: install qemu-img
+    yum:
+      name: qemu-img
+      state: present
+
+  - name: install python-openstackclient
+    pip:
+      name: python-openstackclient
+      version: 3.12.0

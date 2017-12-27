@@ -1,0 +1,29 @@
+- name: disable selinux
+  lineinfile:
+    line: 'SELINUX=disabled'
+    regexp: '^SELINUX=enforcing'
+    path: /etc/selinux/config
+    state: present
+    backrefs: yes
+  register: disable_selinux
+
+- name: selinux to permissive
+  shell: setenforce 0
+  ignore_errors: true
+
+- name: reboot
+  shell: sleep 2 && shutdown -r now "selinux disable"
+  async: 1
+  poll: 0
+  when: disable_selinux.changed and inventory_hostname != '127.0.0.1'
+  ignore_errors: true
+
+- name: wait for server to reboot
+  wait_for:
+    host: "{{ inventory_hostname }}"
+    port: 22
+    state: started
+    delay: 10
+    timeout: 300
+  delegate_to: 127.0.0.1
+  when: disable_selinux.changed and inventory_hostname != '127.0.0.1'

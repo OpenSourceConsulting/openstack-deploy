@@ -1,0 +1,108 @@
+- name: Download kolla-ansible from github
+  git:
+    repo: "{{ kolla_ansible_git_url }}"
+    dest: "{{ kolla_ansible_git_path }}"
+    version: "{{ kolla_ansible_git_version }}"
+    force: yes
+
+- name: check whether python2 is installed
+  shell: which python2
+  register: check_python2
+
+- name: install required python modules
+  pip:
+    requirements: requirements.txt
+    chdir: "{{ kolla_ansible_git_path }}"
+
+- name: install kolla-ansible
+  shell: python2 setup.py install
+  args:
+    chdir: "{{ kolla_ansible_git_path }}"
+  when: check_python2.rc == 0
+
+- name: copy cinder.conf.j2 to modify
+  copy:
+    src: cinder.conf.j2
+    dest: /usr/share/kolla-ansible/ansible/roles/cinder/templates/cinder.conf.j2
+
+- name: copy ml2_conf.ini.j2 to modify
+  copy:
+    src: ml2_conf.ini.j2
+    dest: /usr/share/kolla-ansible/ansible/roles/neutron/templates/ml2_conf.ini.j2
+
+- name: copy extra config files
+  copy:
+    src: config
+    dest: /etc/kolla/
+
+- name: create directories
+  file:
+    path: /etc/kolla/config/{{ item }}
+    state: directory
+  with_items:
+    - nova
+    - cinder
+    - glance
+
+- name: edit qemu.conf config file
+  lineinfile:
+    line: "{{ item }}"
+    dest: /usr/share/kolla-ansible/ansible/roles/nova/templates/qemu.conf.j2
+  with_items:
+    - "max_files = 20480"
+    - "max_processes = 20480"
+
+- name: overwrite precheck.yml cause patch
+  copy:
+    src: precheck.yml
+    dest: /usr/share/kolla-ansible/ansible/roles/kibana/tasks/precheck.yml
+
+- name: overwrite post-deploy.yml cause patch
+  copy:
+    src: post-deploy.yml
+    dest: /usr/share/kolla-ansible/ansible/post-deploy.yml
+
+- name: overwrite recover_cluster.yml
+  copy:
+    src: recover_cluster.yml
+    dest: /usr/share/kolla-ansible/ansible/roles/mariadb/tasks/recover_cluster.yml
+
+- name: copy old passwords file
+  template:
+    src: passwords.yml.old.j2
+    dest: /etc/kolla/passwords.yml.old
+
+- name: check whether passwords.yml.new exists
+  stat: path=/etc/kolla/passwords.yml.new
+  register: password_yml_new_exists
+
+- name: copy new passwords.yml file
+  copy:
+    src: passwords.yml
+    dest: /etc/kolla/passwords.yml.new
+  when: password_yml_new_exists.stat.exists != True
+
+- name: generate /etc/kolla/passwords.yml.new file
+  shell: kolla-genpwd -p /etc/kolla/passwords.yml.new
+  when: password_yml_new_exists.stat.exists != True
+
+- name: generate /etc/kolla/passwords.yml file
+  shell: kolla-mergepwd --old /etc/kolla/passwords.yml.old --new /etc/kolla/passwords.yml.new --final /etc/kolla/passwords.yml
+
+- name: create kolla globals.yml file
+  template:
+    src: globals.yml.j2
+    dest: /etc/kolla/globals.yml
+
+- name: create kolla multinode.j2 file
+  template:
+    src: multinode.j2
+    dest: /etc/kolla/multinode
+
+- name: delete passwords.yml.old and passwords.yml.new file
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /etc/kolla/passwords.yml.old
+    - /etc/kolla/passwords.yml.new

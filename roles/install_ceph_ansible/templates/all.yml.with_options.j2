@@ -1,0 +1,173 @@
+---
+dummy:
+fetch_directory: ~/ceph-ansible-keys
+cluster: ceph # cluster name
+
+mon_group_name: mons
+osd_group_name: osds
+rgw_group_name: rgws
+restapi_group_name: restapis
+rbdmirror_group_name: rbdmirrors
+
+redhat_package_dependencies:
+  - python-pycurl
+  - hdparm
+  - ntp
+  - python-setuptools
+
+ntp_service_enabled: false
+
+ceph_stable_release: {{ ceph_stable_release }}
+
+ceph_custom: true
+ceph_custom_repo: {{ ceph_custom_repo }}
+
+generate_fsid: true
+
+cephx: true
+max_open_files: {{ max_open_files }}
+
+rbd_cache: "true"
+rbd_cache_writethrough_until_flush: "true"
+rbd_concurrent_management_ops: 20
+
+monitor_interface: {{ monitor_interface }}
+
+journal_size: {{ journal_size }}
+public_network: {{ public_network }}
+cluster_network: {{ cluster_network }}
+osd_mkfs_type: xfs
+osd_mkfs_options_xfs: -f -i size=2048
+osd_mount_options_xfs: rw,noatime,nodiratime,inode64,logbsize=256k,delaylog
+
+restapi_interface: {% raw %}"{{ monitor_interface }}"{% endraw %}
+
+restapi_address: {% raw %}"{{ monitor_address }}"{% endraw %}
+
+restapi_port: 5000
+
+ceph_conf_overrides:
+    global:
+      auth_cluster_required: cephx
+      auth_service_required: cephx
+      auth_client_required: cephx
+      err_to_syslog: true
+      mon_cluster_log_file: none
+      debug_client: 0/0
+      debug_auth: 0/0
+      debug_finisher: 0/0
+      debug_monc: 0/0
+      debug_optracker: 0/0
+      debug_rgw: 0/0
+      debug_filer: 0/0
+      debug_buffer: 0/0
+      debug_timer: 0/0
+      debug_asok: 0/0
+      debug_objectcacher: 0/0
+      debug_context: 0/0
+      debug_tp: 0/0
+      debug_journaler: 0/0
+      debug_journal: 0/0
+      debug_objecter: 0/0
+      debug_lockdep: 0/0
+      debug_heartbeatmap: 0/0
+      debug_perfcounter: 0/0
+      debug_throttle: 0/0
+      debug_rbd: 0/0
+      debug_rados: 0/0
+      debug_ms: 0/0
+      debug_crush: 0/0
+      mon_osd_full_ratio: .90
+      mon_osd_nearfull_ratio: .80
+      osd_pool_default_min_size: 1
+      osd_pool_default_size: 3
+
+    mon:
+      mon_compact_on_start: false
+      mon_max_pool_pg_num: 106496
+      mon_osd_max_split_count: 1000
+      mon_osd_down_out_interval: 300
+
+    osd:
+      filestore_op_threads: 8
+      filestore_wbthrottle_enable: false
+      filestore_queue_max_bytes: 1048576000
+      filestore_queue_max_ops: 5000
+      filestore_max_sync_interval: 10
+      filestore_fd_cache_size: 64
+      filestore_fd_cache_shards: 32
+      ms_dispatch_throttle_bytes: 1048576000
+      journal_max_write_entries: 1000
+      journal_max_write_bytes: 1048576000
+      osd_enable_op_tracker: false
+      osd_backfill_full_ratio: .65
+      osd_max_backfils: 1
+      osd_recovery_threads: 1
+      osd_recovery_op_priority: 1
+      osd_recovery_max_active: 1
+      osd_client_op_priority: 63
+      osd_op_threads: 32
+      osd_op_num_shards: 10
+      osd_client_message_size_cap: 0
+      osd_client_message_cap: 0
+      objecter_inflight_ops: 102400
+      objecter_inflight_op_bytes: 1048576000
+
+    client:
+       rbd_cache: true
+       rbd_cache_writethrough_until_flush: true
+
+##################
+# Kernel Tuning
+##################
+disable_transparent_hugepage: true
+os_tuning_params:
+  - { name: kernel.pid_max, value: 4194303 }
+  - { name: fs.file-max, value: 26234859 }
+  - { name: vm.zone_reclaim_mode, value: 0 }
+  - { name: vm.swappiness, value: 10 }
+  - { name: vm.vfs_cache_pressure, value: 10 }
+  - { name: vm.min_free_kbytes, value: 1048576 }
+  - { name: vm.dirty_ratio, value: 30 }
+  - { name: vm.dirty_background_ratio, value: 3 }
+
+  - { name: fs.xfs.xfssyncd_centisecs, value: 720000 }
+  - { name: fs.xfs.xfsbufd_centisecs, value: 3000 }
+  - { name: fs.xfs.age_buffer_centisecs, value: 720000 }
+  - { name: fs.aio-max-nr, value: 50000000 }
+
+  - { name: kernel.sysrq, value: 0 }
+  - { name: kernel.pid_max, value: 4194303 }
+  - { name: kernel.msgmax, value: 65535 }
+  - { name: kernel.msgmnb, value: 65535 }
+
+  - { name: net.core.rmem_default, value: 2097152 }
+  - { name: net.core.wmem_default, value: 2097152 }
+  - { name: net.core.rmem_max, value: 20971520 }
+  - { name: net.core.wmem_max, value: 20971520 }
+  - { name: net.core.optmem_max, value: 4194304 }
+  - { name: net.core.netdev_max_backlog, value: 300000 }
+  - { name: net.core.somaxconn, value: 16384 }
+
+  - { name: net.ipv4.tcp_timestamps, value: 0 }
+  - { name: net.ipv4.tcp_syncookies, value: 0 }
+  - { name: net.ipv4.tcp_sack, value: 1 }
+  - { name: net.ipv4.tcp_max_syn_backlog, value: 100000 }
+  - { name: net.ipv4.tcp_max_tw_buckets, value: 2000000 }
+  - { name: net.ipv4.tcp_tw_recycle, value: 1 }
+  - { name: net.ipv4.tcp_tw_reuse, value: 1 }
+  - { name: net.ipv4.tcp_low_latency, value: 1 }
+  - { name: net.ipv4.tcp_adv_win_scale, value: 1 }
+  - { name: net.ipv4.tcp_slow_start_after_idle, value: 0 }
+  - { name: net.ipv4.tcp_no_metrics_save, value: 1 }
+  - { name: net.ipv4.tcp_syncookies, value: 0 }
+  - { name: net.ipv4.tcp_ecn, value: 0 }
+  - { name: net.ipv4.tcp_wmem, value: '2097152 2097152 20971520' }
+  - { name: net.ipv4.tcp_rmem, value: '2097152 2097152 20971520' }
+  - { name: net.ipv4.route.flush, value: 1 }
+
+
+##############
+# OPENSTACK
+##############
+openstack_config: true

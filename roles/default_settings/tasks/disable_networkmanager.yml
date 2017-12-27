@@ -1,0 +1,12 @@
+- name: check NetworkManager package
+  shell: yum list installed NetworkManager
+  register: pkg_check
+  ignore_errors: yes
+
+- name: disable networkmanager
+  service:
+    name: NetworkManager
+    state: stopped
+    enabled: false
+  when: pkg_check.rc == 0
+  ignore_errors: yes

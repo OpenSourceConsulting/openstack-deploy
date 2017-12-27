@@ -1,0 +1,5 @@
+---
+# defaults file for cobbler_install
+image_download_path: "/tmp"
+
+kickstart_file_name: centos_7.3.1611.ks

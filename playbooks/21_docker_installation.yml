@@ -1,0 +1,6 @@
+---
+- name: pre-installation for kolla
+  hosts: kolla
+
+  roles:
+    - docker_install

@@ -1,0 +1,7 @@
+---
+# tasks file for kolla_deploy
+- include: create_directory.yml
+- include: local_docker_registry.yml
+- include: download_images.yml
+- include: kolla_ansible_install.yml
+- include: show_commands.yml

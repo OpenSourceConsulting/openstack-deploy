@@ -1,0 +1,35 @@
+---
+- name: create yum repo directory
+  file:
+    path: /etc/yum.repos.d
+    state: directory
+
+- name: create base repo file
+  template:
+    src: base.repo.j2
+    dest: /etc/yum.repos.d/base.repo
+
+- name: create updates repo file
+  template:
+    src: updates.repo.j2
+    dest: /etc/yum.repos.d/updates.repo
+
+- name: create epel repo file
+  template:
+    src: epel.repo.j2
+    dest: /etc/yum.repos.d/epel.repo
+
+- name: create extras repo file
+  template:
+    src: extras.repo.j2
+    dest: /etc/yum.repos.d/extras.repo
+
+- name: create openstack repo file
+  template:
+    src: openstack.repo.j2
+    dest: /etc/yum.repos.d/openstack.repo
+
+- name: create ceph repo file
+  template:
+    src: ceph-jewel.repo.j2
+    dest: /etc/yum.repos.d/ceph-jewel.repo

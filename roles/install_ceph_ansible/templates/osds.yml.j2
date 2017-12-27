@@ -1,0 +1,20 @@
+---
+dummy:
+
+crush_location: false
+
+osd_crush_location: {% raw %}"\"root={{ ceph_crush_root }} rack={{ ceph_crush_rack }} host={{ ansible_hostname }}\""{% endraw %}
+
+devices:
+{% for device in osd_devices %}
+  - {{ device }}
+{% endfor %}
+
+journal_collocation: {{ journal_collocation }}
+
+raw_multi_journal: {{ raw_multi_journal }}
+
+raw_journal_devices:
+{% for device in raw_journal_devices %}
+  - {{ device }}
+{% endfor %}
