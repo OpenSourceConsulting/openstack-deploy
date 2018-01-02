@@ -9,5 +9,3 @@ pip install -U pip
 
 echo "Install ansible-2.4.0"
 pip install ansible==2.4.0
-
-# slack integrate test
