@@ -1,0 +1,5 @@
+---
+- name: Start ceph-rest-api service
+  hosts: ceph_mons
+  roles:
+    - ceph_rest_api

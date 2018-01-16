@@ -1,0 +1,14 @@
+---
+# tasks file for ceph_rest_api
+- name: copy ceph-rest-api systemd file
+  copy:
+    src: ceph-rest-api.service
+    dest: /usr/lib/systemd/system/ceph-rest-api.service
+  when: inventory_hostname == groups['ceph_mons'][0]
+
+- name: start ceph-rest-api service
+  service:
+    name: ceph-rest-api
+    state: started
+    enabled: true
+  when: inventory_hostname == groups['ceph_mons'][0]
