@@ -30,6 +30,7 @@ deploy-server is named "cloud-deploy" which is localhost.
 Run default settings for deploy server
 --------------------------------------
 ::
+
     # sh 00_setting_default_for_deploy-server.sh
     # sh 01_run_default_settings_for_deploy_server.sh
 
@@ -40,6 +41,7 @@ Run default settings for deploy server
 Create local repository for rpm packages
 ----------------------------------------
 ::
+
     # sh 02_create_local_repo.sh
 
 - Download rpm packages; centos base, updates, extras and docker, ceph, openstack etc
@@ -48,6 +50,7 @@ Create local repository for rpm packages
 Download ceph-ansible and koll-ansible, then download kolla-images
 ------------------------------------------------------------------
 ::
+
     # sh 04_install_deploy_server.sh
 
 - Download ceph-ansible and kolla-ansible from github and modify
@@ -60,6 +63,7 @@ Download ceph-ansible and koll-ansible, then download kolla-images
 Deploy ceph
 -----------
 ::
+
     # sh 11_run_default_settings_for_ceph.sh
     # sh 12_install_ceph_ansible.sh
 
@@ -67,6 +71,7 @@ Deploy ceph
 Deploy kolla(openstack)
 -----------------------
 ::
+
     # 21_run_default_settings_for_kolla.sh
     # 22_install_docker.sh
     # 23_precheck_kolla_ansible.sh
@@ -86,21 +91,29 @@ Upgrade ceph
 Firstly, you have to update your rpm repository for ceph packages.
 
 ::
+
     # ansible-playbook -i ceph-hosts.txt infrastructure-playbooks/rolling_update.yml
 
 
 Upgrade kolla(openstack)
 ------------------------
 
+Change version 
 ::
-    Change version 
+
     # vi inventory/group_vars/all.yml
     -kolla_ansible_git_version: 4.0.2
     +kolla_ansible_git_version: 4.0.3
 
-    Run to download new kolla-images
+
+Run to download new kolla-images
+::
+
     # ansible-playbook playbooks/41_download_new_kolla_images.yml
 
-    Run to upgrade to new images
+
+Run to upgrade to new images
+::
+
     # kolla-ansible upgrade -i /etc/kolla/multinode
 
