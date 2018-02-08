@@ -1,0 +1,49 @@
+---
+# vars file for kolla_deploy
+kolla_base_distro: centos
+kolla_install_type: binary
+node_custom_config: /etc/kolla/config
+
+kolla_images:
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-cinder-api
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-cinder-backup
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-cinder-scheduler
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-cinder-volume
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-cron
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-etcd
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-fluentd
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-glance-api
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-glance-base
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-glance-registry
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-grafana
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-haproxy
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-horizon
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-influxdb
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-iscsid
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-keepalived
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-keystone
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-keystone-base
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-keystone-fernet
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-keystone-ssh
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-kibana
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-kolla-toolbox
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-kubetoolbox
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-mariadb
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-memcached
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-mongodb
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-neutron-dhcp-agent
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-neutron-l3-agent
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-neutron-lbaas-agent
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-neutron-linuxbridge-agent
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-neutron-metadata-agent
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-neutron-server
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-nova-api
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-nova-compute
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-nova-conductor
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-nova-consoleauth
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-nova-libvirt
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-nova-novncproxy
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-nova-placement-api
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-nova-scheduler
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-nova-ssh
+ - kolla/{{ kolla_base_distro }}-{{ kolla_install_type }}-rabbitmq
